@@ -18,16 +18,16 @@ const start = () => {
         type: "list",
         message: "What would you like to do?",
         default: "(use arrow keys)",
-        choices: ["View All Employees", "View All Employees by Department", "View All Employees by Manager", "Add Employees", "Add Department", "Add Role", "Update Employee Roles", "Quit"]
+        choices: ["View All Employees", "View All Departments", "View All Roles", "Add Employees", "Add Department", "Add Role", "Update Employee Roles", "Quit"]
     }).then((answer) => {
         if (answer.mainAction == "View All Employees"){
             getEmployees()
         }
         if (answer.mainAction == "View All Departments"){
-            getEmployeesDept()
+            getDepartments()
         }
         if (answer.mainAction == "View All Roles"){
-            getEmployeesDept()
+            getRoles()
         }
         if (answer.mainAction == "Add Employees"){
             addEmployee()
@@ -41,8 +41,6 @@ const start = () => {
         else {
             // updateEmployeeRole()
         }
-        
-
     })
 }
 
@@ -55,8 +53,29 @@ const getEmployees = ()=> {
         console.table(data)
         start()
     })
-
 }
+
+const getDepartments = ()=> {
+    //arguments (actual query statment that you want to make, callback)
+    //interacting with a database is asynchronous
+    connection.query('SELECT * FROM department', (err, data) => {
+        if (err) throw err
+        console.table(data)
+        start()
+    })
+}
+
+const getRoles = ()=> {
+    //arguments (actual query statment that you want to make, callback)
+    //interacting with a database is asynchronous
+    connection.query('SELECT * FROM roles', (err, data) => {
+        if (err) throw err
+        console.table(data)
+        start()
+    })
+}
+
+
 
 const addEmployee = () => {
     inquirer.prompt([
@@ -90,7 +109,6 @@ const addEmployee = () => {
         // choices: ["None", "Joe Sakic", "Adamn Deadmarsh", "Peter Forsberg"]
         // }
     ]).then((answer) => {
-
         connection.query(
             "INSERT INTO employee SET ?",
             {
@@ -98,23 +116,65 @@ const addEmployee = () => {
                 last_name: answer.last_name,
                 role_id: answer.role_id,
                 manager_id: answer.manager_id
-
-                //do a switch case for who they select for 
-
             },
                 (err) => {
                     if (err) throw err;
                     console.log("The employee was created successfully.")
                     start()
                 }
-
-
         )
-    
-
     })
 }
 
+const addDepartment = () => {
+    inquirer.prompt([
+        {
+        name: "department",
+        type: "input",
+        message: "What is the name of the department?",
+        },
+    ]).then((answer) => {
+        connection.query(
+            "INSERT INTO department SET ?",
+            {
+                department: answer.department
+            },
+                (err) => {
+                    if (err) throw err;
+                    console.log("The department was created successfully.")
+                    start()
+                }
+        )
+    })
+}
+
+const addRole = () => {
+    inquirer.prompt([
+        {
+        name: "title",
+        type: "input",
+        message: "What is the role you would like to add?",
+        },
+        {
+        name: "salary",
+        type: "input",
+        message: "What is the salary of this role?",
+        },
+    ]).then((answer) => {
+        connection.query(
+            "INSERT INTO roles SET ?",
+            {
+                title: answer.title,
+                salary: answer.salary
+            },
+                (err) => {
+                    if (err) throw err;
+                    console.log("The department was created successfully.")
+                    start()
+                }
+        )
+    })
+}
 
 
 // const updateEmployee = () => {
