@@ -39,7 +39,7 @@ const start = () => {
             addRole()
         }
         else {
-            updateEmployeeRole()
+            // updateEmployeeRole()
         }
         
 
@@ -53,9 +53,69 @@ const getEmployees = ()=> {
     connection.query('SELECT * FROM employee', (err, data) => {
         if (err) throw err
         console.table(data)
+        start()
     })
 
 }
+
+const addEmployee = () => {
+    inquirer.prompt([
+        {
+        name: "first_name",
+        type: "input",
+        message: "What is the employee's first name?",
+        },
+        {
+        name: "last_name",
+        type: "input",
+        message: "What is the employee's last name?",
+        },
+        {
+        name: "role_id",
+        type: "list",
+        message: "What is the employee's role?",
+        default: "(use arrow keys)",
+        choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead"]
+        },
+        {
+        name: "manager_id",
+        type: "input",
+        message: "Who is the employees manager?",
+        }
+        // {
+        // name: "manager_id",
+        // type: "list",
+        // message: "Who is the employee's manager?",
+        // default: "(use arrow keys)",
+        // choices: ["None", "Joe Sakic", "Adamn Deadmarsh", "Peter Forsberg"]
+        // }
+    ]).then((answer) => {
+
+        connection.query(
+            "INSERT INTO employee SET ?",
+            {
+                first_name: answer.first_name,
+                last_name: answer.last_name,
+                role_id: answer.role_id,
+                manager_id: answer.manager_id
+
+                //do a switch case for who they select for 
+
+            },
+                (err) => {
+                    if (err) throw err;
+                    console.log("The employee was created successfully.")
+                    start()
+                }
+
+
+        )
+    
+
+    })
+}
+
+
 
 // const updateEmployee = () => {
 //     console.log("Updating employee") 
