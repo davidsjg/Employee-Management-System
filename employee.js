@@ -38,8 +38,8 @@ const start = () => {
         if (answer.mainAction == "Add Role"){
             addRole()
         }
-        else {
-            // updateEmployeeRole()
+        if(answer.mainAction == "Update Employee Roles") {
+            updateEmployeeRole()
         }
     })
 }
@@ -173,6 +173,52 @@ const addRole = () => {
                     start()
                 }
         )
+    })
+}
+
+const updateEmployeeRole = () => {
+    connection.query("SELECT * FROM employee", (err, results) =>{
+        if (err) throw err;
+        inquirer.prompt([
+            {
+            name: "choice",
+            type: "rawlist",
+            message: "Which employee's role do you want to update?",
+            default: "(use arrow keys)",
+            choices() {
+                const choiceArray = [];
+                results.forEach(({last_name}) => {
+                    choiceArray.push(last_name);
+                })
+                return choiceArray;
+                }
+            },
+            {
+            name: "choice2",
+            type: "rawlist",
+            message: "Which role do you want to assign the selected employee ?",
+            default: "(use arrow keys)",
+            choices() {
+                const choiceArray2 = [];
+                results.forEach(({last_name}) => {
+                    choiceArray2.push(last_name);
+                })
+                return choiceArray2;
+                }
+            }
+        ]).then((answer) => {
+            connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                    role_id: answer.choice2
+                },
+                    (err) => {
+                        if (err) throw err;
+                        console.log("The role was updated successfully.")
+                        start()
+                    }
+            )
+        })
     })
 }
 
