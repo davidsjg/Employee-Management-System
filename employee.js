@@ -56,7 +56,7 @@ const getEmployees = ()=> {
 }
 
 const getDepartments = ()=> {
-    //arguments (actual query statment that you want to make, callback)
+    e, callback)
     //interacting with a database is asynchronous
     connection.query('SELECT * FROM department', (err, data) => {
         if (err) throw err
@@ -192,20 +192,20 @@ const updateEmployeeRole = () => {
                 })
                 return choiceArray;
                 }
-            },
-            {
-            name: "choice2",
-            type: "rawlist",
-            message: "Which role do you want to assign the selected employee ?",
-            default: "(use arrow keys)",
-            choices() {
-                const choiceArray2 = [];
-                results.forEach(({last_name}) => {
-                    choiceArray2.push(last_name);
-                })
-                return choiceArray2;
-                }
-            }
+            }//,
+            // {
+            // name: "choice2",
+            // type: "rawlist",
+            // message: "Which role do you want to assign the selected employee ?",
+            // default: "(use arrow keys)",
+            // choices() {
+            //     const choiceArray2 = [];
+            //     results.forEach(({last_name}) => {
+            //         choiceArray2.push(last_name);
+            //     })
+            //     return choiceArray2;
+            //     }
+            // }
         ]).then((answer) => {
             connection.query(
                 "INSERT INTO employee SET ?",
@@ -220,6 +220,36 @@ const updateEmployeeRole = () => {
             )
         })
     })
+    // connection.query("SELECT * FROM roles", (err, results) =>{
+    //     if (err) throw err;
+    //     inquirer.prompt([
+    //         {
+    //         name: "choice2",
+    //         type: "rawlist",
+    //         message: "Which role do you want to assign the selected employee ?",
+    //         default: "(use arrow keys)",
+    //         choices() {
+    //             const choiceArray2 = [];
+    //             results.forEach(({last_name}) => {
+    //                 choiceArray2.push(last_name);
+    //             })
+    //             return choiceArray2;
+    //             }
+    //         }
+    //     ]).then((answer) => {
+    //         connection.query(
+    //             "INSERT INTO employee SET ?",
+    //             {
+    //                 role_id: answer.choice2
+    //             },
+    //                 (err) => {
+    //                     if (err) throw err;
+    //                     console.log("The role was updated successfully.")
+    //                     start()
+    //                 }
+    //         )
+    //     })
+    // })
 }
 
 
