@@ -40,7 +40,9 @@ const start = () => {
         }
         if(answer.mainAction == "Update Employee Roles") {
             updateEmployeeRole()
-        }
+        } else(answer.mainAction == "Quit") 
+            return 0
+        
     })
 }
 
@@ -48,15 +50,25 @@ const start = () => {
 const getEmployees = ()=> {
     //arguments (actual query statment that you want to make, callback)
     //interacting with a database is asynchronous
-    connection.query('SELECT * FROM employee', (err, data) => {
+
+    // need to select id, first_name, last_name, title, salary, manager
+    // let query = "SELECT employee.first_name, employee.last_name, roles.title, roles.salary, employee.manager_id "
+    // query += "FROM roles INNER JOIN department ON (roles.department_id = department.id) "
+    // query += "INNER JOIN employee ON (employee.role_id = roles.id "
+    // query += "LEFT JOIN employee manager ON (manager.id = employee.manager_id"
+
+
+    connection.query('SELECT first_name, last_name FROM employee', (err, data) => {
         if (err) throw err
         console.table(data)
         start()
     })
+
+    // 'SELECT * FROM employee'
 }
 
 const getDepartments = ()=> {
-    e, callback)
+    //arguments (actual query statment that you want to make, callback)
     //interacting with a database is asynchronous
     connection.query('SELECT * FROM department', (err, data) => {
         if (err) throw err
@@ -68,11 +80,14 @@ const getDepartments = ()=> {
 const getRoles = ()=> {
     //arguments (actual query statment that you want to make, callback)
     //interacting with a database is asynchronous
-    connection.query('SELECT * FROM roles', (err, data) => {
+    let query = "SELECT roles.title, roles.salary, department.department "
+    query += "FROM roles INNER JOIN department ON roles.department_id = department.id"
+    connection.query(query, (err, data) => {
         if (err) throw err
         console.table(data)
         start()
     })
+    // 'SELECT * FROM roles'
 }
 
 
@@ -96,11 +111,11 @@ const addEmployee = () => {
         default: "(use arrow keys)",
         choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Software Engineer", "Account Manager", "Accountant", "Legal Team Lead"]
         },
-        {
-        name: "manager_id",
-        type: "input",
-        message: "Who is the employees manager?",
-        }
+        // {
+        // name: "manager_id",
+        // type: "input",
+        // message: "Who is the employees manager?",
+        // }
         // {
         // name: "manager_id",
         // type: "list",
